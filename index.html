@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Pro | Reporte Responsivo</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
+
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --bg-color: #f4f7f6;
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            font-family: 'Inter', sans-serif;
+            color: #333;
+        }
+
+        .main-card { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 1.25rem; 
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.08); 
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Estilos para KPIs */
+        .kpi-card {
+            border: none;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover { transform: translateY(-3px); }
+
+        /* Ajustes de Gráfico para móviles */
+        #chart_div {
+            min-height: 350px;
+            width: 100%;
+        }
+
+        /* Tabla responsiva y estilizada */
+        .table-container {
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .main-card { padding: 1.25rem; }
+            h1 { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="main-card">
+        <header class="row mb-4">
+            <div class="col-12 text-center text-lg-start">
+                <h1 class="fw-bold text-dark mb-1">Dashboard de Ventas</h1>
+                <p class="text-muted small">Última actualización: <span id="fecha-actual"></span></p>
+            </div>
+        </header>
+
+        <div class="row g-3 mb-5">
+            <div class="col-12 col-md-4">
+                <div class="kpi-card bg-white border shadow-sm">
+                    <span class="text-muted d-block mb-1 small fw-bold text-uppercase">Ventas Totales</span>
+                    <h3 class="fw-bold text-primary mb-0">1,550</h3>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="kpi-card bg-primary text-white shadow">
+                    <span class="text-white-50 d-block mb-1 small fw-bold text-uppercase">Más Vendido</span>
+                    <h3 class="fw-bold mb-0">Plátanos</h3>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="kpi-card bg-white border shadow-sm">
+                    <span class="text-muted d-block mb-1 small fw-bold text-uppercase">Eficiencia Stock</span>
+                    <h3 class="fw-bold text-success mb-0">94.2%</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12 col-xl-8">
+                <div class="p-3 border rounded shadow-sm bg-light h-100">
+                    <h5 class="fw-bold mb-3 px-2">Análisis de Distribución</h5>
+                    <div id="chart_div"></div>
+                </div>
+            </div>
+
+            <div class="col-12 col-xl-4">
+                <div class="p-3 border rounded shadow-sm bg-white h-100">
+                    <h5 class="fw-bold mb-3">Detalle de Stock</h5>
+                    <div class="table-responsive table-container">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr class="small text-uppercase">
+                                    <th>Producto</th>
+                                    <th class="text-end">Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Manzanas</td>
+                                    <td class="text-end"><span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">20 unidades</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Naranjas</td>
+                                    <td class="text-end"><span class="badge rounded-pill bg-warning-subtle text-warning-emphasis border border-warning-subtle">50 unidades</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Plátanos</td>
+                                    <td class="text-end"><span class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle">10 unidades</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Uvas</td>
+                                    <td class="text-end"><span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">35 unidades</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button class="btn btn-outline-primary btn-sm w-100">Descargar Reporte Completo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Mostrar fecha actual
+    document.getElementById('fecha-actual').textContent = new Date().toLocaleDateString();
+
+    // Configuración de Plotly Responsivo
+    const data = [{
+        x: ['Manzanas', 'Naranjas', 'Plátanos', 'Uvas'],
+        y: [450, 300, 600, 200],
+        type: 'bar',
+        marker: {
+            color: ['#0d6efd', '#fd7e14', '#198754', '#6f42c1'],
+            borderWidth: 0
+        },
+        hovertemplate: '<b>%{x}</b><br>Ventas: %{y} unidades<extra></extra>'
+    }];
+
+    const layout = {
+        autosize: true,
+        margin: { t: 20, b: 40, l: 40, r: 10 },
+        font: { family: 'Inter, sans-serif', size: 12 },
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        xaxis: { gridcolor: '#eee' },
+        yaxis: { gridcolor: '#eee' }
+    };
+
+    const config = { 
+        responsive: true, 
+        displayModeBar: false // Oculta la barra de herramientas para un look más limpio
+    };
+
+    Plotly.newPlot('chart_div', data, layout, config);
+</script>
+
+</body>
+</html>
